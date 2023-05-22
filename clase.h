@@ -425,11 +425,11 @@ void Abonat::afisare() {
 	std::cout << "Numar Telefon: " << nr_telefon << "\n";
 	std::cout << "Abonament: ";
 	x->afisare();
-	std::cout << "\n";
+	//std::cout << "\n";
 }
 
 template <typename T>
-float suma_totala(Clienti& clienti = Clienti::getInstance()) {
+T suma_totala(Clienti& clienti = Clienti::getInstance()) {
 	T suma = 0;
 	for (int i = 0; i < clienti.get_client().size(); i++) {
 		if (dynamic_cast<Abonament_Premium*>(clienti.get_client()[i]->getAbonament())) {

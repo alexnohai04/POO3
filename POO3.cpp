@@ -75,7 +75,7 @@ int main()
 			}
 			case 4: {
 				try {
-					std::cout << "\n" << "Suma totala incasata : " << suma_totala<int>(clienti) << "\n\n";
+					std::cout << "\n" << "Suma totala incasata : " << suma_totala<float>(clienti) << "\n\n";
 				}
 
 				catch (Exceptie<std::string>& e) {
