@@ -41,7 +41,7 @@ int main()
 				catch (Exceptie<std::string>& e) {
 					std::cout << e.what() << "\n";
 				}
-				catch (std::runtime_error& err) { std::cout << err.what() << "\n"; }
+
 				break;
 			}
 			case 2: {

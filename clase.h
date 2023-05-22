@@ -42,7 +42,7 @@ public:
 
 class connection_pool {
 private:
-	static const int max_conns = 3;
+	static const int max_conns = 4;
 	std::vector<connection> conns{ max_conns };
 public:
 	connection& get_conn() {
@@ -299,18 +299,6 @@ public:
 		static Clienti instance;
 		return instance;
 	}
-	Clienti() { /*cout << "Constructor Default Clienti";*/ }
-	~Clienti() {/* cout << "Destructor Default Clienti";*/ }
-	//constructor cu parametrii
-	Clienti(std::vector <std::shared_ptr<Abonat>> _client) {
-		//cout << "Constructor cu parametru Clienti\n";
-		client = _client;
-	}
-	//constructor de copiere
-	Clienti(const Clienti& c) {
-		client = c.client;
-		//cout << "Constructor de copiere Clienti\n";
-	}
 	//getter
 	std::vector <std::shared_ptr<Abonat>> getClient() {
 		return client;
@@ -353,6 +341,8 @@ public:
 
 private:
 	std::vector <std::shared_ptr<Abonat>>client;
+	Clienti() { /*cout << "Constructor Default Clienti";*/ }
+	~Clienti() {/* cout << "Destructor Default Clienti";*/ }
 };
 
 //functie virtuala de citire
@@ -428,8 +418,8 @@ void Abonat::citire() {
 	std::cout << "\n";
 
 }
-//functie  de afisare
 
+//functie  de afisare
 void Abonat::afisare() {
 	Persoana::afisare();
 	std::cout << "Numar Telefon: " << nr_telefon << "\n";
