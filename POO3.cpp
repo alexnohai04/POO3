@@ -8,7 +8,8 @@ int main()
 {
 	std::cout << "Bine ati venit la aplicatia de gestiune a abonamentelor!\n";
 	bool loop = 1;
-	static Clienti c1;
+	connection_pool pool;
+	Clienti& clienti = Clienti::getInstance();
 	while (loop) {
 		std::cout << "Alege o actiune!\n";
 		std::cout << "1. Adaugare abonati\n";
@@ -31,22 +32,24 @@ int main()
 			case 1: {
 				Abonat a1;
 				try {
+					connection& c = pool.get_conn();
 					std::cout << "\nIntroduceti datele abonatului:\n";
 					a1.citire();
-					c1.adaugaAbonat(a1);
+					clienti.adaugaAbonat(a1);
 					std::cout << "\nFelicitari! Ati adaugat un abonat cu succes!\n";
 				}
 				catch (Exceptie<std::string>& e) {
 					std::cout << e.what() << "\n";
 				}
+				catch (std::runtime_error& err) { std::cout << err.what() << "\n"; }
 				break;
 			}
 			case 2: {
 				try {
-					if (c1.get_nr_abonati() == 0)
+					if (clienti.get_nr_abonati() == 0)
 						std::cout << "Nu exista abonati!\n";
 					else
-						c1.afisare();
+						clienti.afisare();
 				}
 				catch (Exceptie<std::string>& e) {
 					std::cout << e.what() << "\n";
@@ -59,9 +62,9 @@ int main()
 					int optiune2;
 					std::cin >> optiune2;
 					if (optiune2 == 1)
-						std::cout << "\n" << "Numar total de abonamente: " << c1.numar_abonati_premium<Abonament>() << "\n\n";
+						std::cout << "\n" << "Numar total de abonamente: " << clienti.numar_abonati_premium<Abonament>() << "\n\n";
 					else if (optiune2 == 2)
-						std::cout << "\n" << "Numar abonamente premium : " << c1.numar_abonati_premium<Abonament_Premium>() << "\n\n";
+						std::cout << "\n" << "Numar abonamente premium : " << clienti.numar_abonati_premium<Abonament_Premium>() << "\n\n";
 					else std::cout << "Optiune invalida!\n";
 
 				}
@@ -72,7 +75,7 @@ int main()
 			}
 			case 4: {
 				try {
-					std::cout << "\n" << "Suma totala incasata : " << suma_totala<int>(c1) << "\n\n";
+					std::cout << "\n" << "Suma totala incasata : " << suma_totala<int>(clienti) << "\n\n";
 				}
 
 				catch (Exceptie<std::string>& e) {

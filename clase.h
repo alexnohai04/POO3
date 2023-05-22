@@ -30,6 +30,31 @@ public:
 	}
 };
 
+class connection {
+private:
+	bool opened = false;
+public:
+	void open() { opened = true; }
+	bool free() const { return !opened; }
+	void close() { opened = false; }
+	~connection() { close(); }
+};
+
+class connection_pool {
+private:
+	static const int max_conns = 3;
+	std::vector<connection> conns{ max_conns };
+public:
+	connection& get_conn() {
+		for (auto& conn : conns)
+			if (conn.free()) {
+				conn.open();
+				return conn;
+			}
+		throw std::runtime_error("\nAti atins limita de 3 abonati!\n");
+	}
+};
+
 class Abonament {
 public:
 	Abonament() {/* cout << "Constructor Default Abonament\n";*/ }
@@ -270,6 +295,10 @@ protected:
 
 class Clienti {
 public:
+	static Clienti& getInstance() {
+		static Clienti instance;
+		return instance;
+	}
 	Clienti() { /*cout << "Constructor Default Clienti";*/ }
 	~Clienti() {/* cout << "Destructor Default Clienti";*/ }
 	//constructor cu parametrii
@@ -321,19 +350,6 @@ public:
 		}
 		return numar;
 	}
-	/*float suma_totala() {
-		float suma = 0;
-		for (int i = 0; i < client.size(); i++) {
-			if (dynamic_cast<Abonament_Premium*>(client[i]->getAbonament())) {
-				Abonament_Premium* abonament_premium = dynamic_cast<Abonament_Premium*>(client[i]->getAbonament());
-				suma += ((abonament_premium->get_pret()) * (abonament_premium->get_perioada())) - (abonament_premium->get_reducere());
-			}
-			else {
-				suma += (client[i]->getAbonament()->get_pret()) * (client[i]->getAbonament()->get_perioada());
-			}
-		}
-		return suma;
-	}*/
 
 private:
 	std::vector <std::shared_ptr<Abonat>>client;
@@ -423,15 +439,15 @@ void Abonat::afisare() {
 }
 
 template <typename T>
-float suma_totala(Clienti c1) {
+float suma_totala(Clienti& clienti = Clienti::getInstance()) {
 	T suma = 0;
-	for (int i = 0; i < c1.get_client().size(); i++) {
-		if (dynamic_cast<Abonament_Premium*>(c1.get_client()[i]->getAbonament())) {
-			Abonament_Premium* abonament_premium = dynamic_cast<Abonament_Premium*>(c1.get_client()[i]->getAbonament());
+	for (int i = 0; i < clienti.get_client().size(); i++) {
+		if (dynamic_cast<Abonament_Premium*>(clienti.get_client()[i]->getAbonament())) {
+			Abonament_Premium* abonament_premium = dynamic_cast<Abonament_Premium*>(clienti.get_client()[i]->getAbonament());
 			suma += ((abonament_premium->get_pret()) * (abonament_premium->get_perioada())) - (abonament_premium->get_reducere());
 		}
 		else {
-			suma += (c1.get_client()[i]->getAbonament()->get_pret()) * (c1.get_client()[i]->getAbonament()->get_perioada());
+			suma += (clienti.get_client()[i]->getAbonament()->get_pret()) * (clienti.get_client()[i]->getAbonament()->get_perioada());
 		}
 	}
 	return suma;
